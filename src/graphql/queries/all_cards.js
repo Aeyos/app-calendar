@@ -6,30 +6,23 @@ import cardFragment from '../fragments/card_fragment';
 
 export default gql`
   query allCardsQuery(
-    $pipeId: ID!
-    $endDate: String!
-    $startDate: String!
-    $endCursor: String
-    $pageSize: Int!
+    $organizationId: ID!,
+    $filter: OrganizationCardsFilter,
+    $pipeIds: [Int]!,
+    $sortBy: ReportSortDirectionInput!,
+    $pagination: ReportPaginationInput!
   ) {
-    allCards(
-      pipeId: $pipeId
-      filter: {
-        field: "due_date"
-        operator: gte
-        value: $startDate
-        AND: { field: "due_date", operator: lte, value: $endDate }
-      }
-      after: $endCursor
-      first: $pageSize
+    cardSearch(
+      organizationId: $organizationId,
+      filter: $filter,
+      pipeIds: $pipeIds,
+      sortBy: $sortBy,
+      pagination: $pagination
     ) {
-      edges {
-        node {
-          ...cardFragment
-        }
+      cards {
+      ...cardFragment
       }
     }
   }
-
   ${cardFragment}
 `;

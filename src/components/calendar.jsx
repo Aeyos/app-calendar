@@ -8,7 +8,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 import Event from './event';
 import Toolbar from './toolbar';
-import { endDateByView, startDateByView } from '../utils';
+import { endDateByView, startDateByView, mountDateFilter } from '../utils';
 import type { Card, Pipefy } from '../models';
 
 import '../assets/stylesheets/calendar.css';
@@ -53,8 +53,10 @@ class Calendar extends React.Component<Props, State> {
     }
 
     refetch({
-      startDate: startDateByView(storedDate, currentView),
-      endDate: endDateByView(storedDate, currentView),
+      filter: mountDateFilter(
+        startDateByView(storedDate, currentView),
+        endDateByView(storedDate, currentView)
+      ),
     });
   }
 

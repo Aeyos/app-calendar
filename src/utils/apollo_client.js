@@ -12,7 +12,7 @@ export default (token: string) =>
     link: createHttpLink({
       credentials: 'include',
       headers: { Authorization: `Bearer ${token}` },
-      uri: `${baseURI}/queries`,
+      uri: `${baseURI}/internal_api`,
     }),
     cache: new InMemoryCache(),
   });

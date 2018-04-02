@@ -6,7 +6,7 @@ import type { Card } from '../models';
 
 const unit = view => (view === 'agenda' ? 'day' : view);
 
-export const endDateByView = (date: Date, view: string) => {
+export const endDateByView = (date: Date, view: string): string => {
   const processedDate = moment.utc(date);
 
   if (view === 'agenda') processedDate.add(30, 'days');
@@ -14,21 +14,39 @@ export const endDateByView = (date: Date, view: string) => {
   return processedDate.endOf(unit(view)).toISOString();
 };
 
-export const startDateByView = (date: Date, view: string) =>
+export const startDateByView = (date: Date, view: string): string =>
   moment
     .utc(date)
     .startOf(unit(view))
     .toISOString();
 
-export const transformEdgesToEvents = (edges: Array<{ node: Card }>) =>
-  edges.map(edge => {
-    const start = new Date(edge.node.due_date);
+export const transformEdgesToEvents = (data: Array<{ node: Card }>) =>
+  data.cards.map(card => {
+    const start = new Date(card.due_date);
     const end = new Date(start.getTime() + 30 * 60000);
 
     return {
       end,
-      id: edge.node.suid,
+      id: card.suid,
       start,
-      title: edge.node.title,
+      title: card.title,
     };
   });
+
+export const mountDateFilter = (startDate: string, endDate: string) => ({
+  operator: 'and',
+  queries: [
+    {
+      field: 'due_date',
+      value: startDate,
+      operator: 'gt',
+      type: 'date',
+    },
+    {
+      field: 'due_date',
+      value: endDate,
+      operator: 'lt',
+      type: 'date',
+    },
+  ],
+});
