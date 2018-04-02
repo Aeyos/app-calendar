@@ -89,7 +89,7 @@ exports[`Toolbar render with a truthy loading props 1`] = `
     Testing label
   </span>
   <span
-    className="rbc-btn-group pipe-navigate pp-position-absolute"
+    className="rbc-btn-group pipe-navigate"
   >
     <span
       className="pp-ico-loading pp-color-info"

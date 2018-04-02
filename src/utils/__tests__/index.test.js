@@ -1,4 +1,5 @@
-import { endDateByView, startDateByView, transformCardsToEvents } from '../';
+import { endDateByView, startDateByView, transformEdgesToEvents } from '../';
+import data from '../../../__mocks__/apollo';
 import { card, event } from '../../../__mocks__';
 
 const date = new Date(card.due_date);
@@ -47,8 +48,8 @@ describe('Start date by view', () => {
   });
 });
 
-it('Transform cards to events', () => {
-  const result = transformCardsToEvents([card]);
+it('Transform edges to events', () => {
+  const result = transformEdgesToEvents(data.allCards.edges);
   const expected = [event];
   expect(result).toEqual(expect.arrayContaining(expected));
 });
