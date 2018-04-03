@@ -14,5 +14,7 @@ export default (token: string) =>
       headers: { Authorization: `Bearer ${token}` },
       uri: `${baseURI}/internal_api`,
     }),
-    cache: new InMemoryCache(),
+    cache: new InMemoryCache({
+      dataIdFromObject: object => object.id || null,
+    }),
   });

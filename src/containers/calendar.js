@@ -19,13 +19,7 @@ const allCardsQueryOptions = {
       ),
       pipeIds: [pipefy.app.pipeId],
       sortBy: { field: 'due_date', direction: 'desc' },
-      pagination: { perPage: 1, page: 1 },
-    },
-  }),
-  props: ({ data, fetchMore }) => ({
-    data: {
-      ...data,
-      events: data.loading || !data.cardSearch ? [] : transformEdgesToEvents(data.cardSearch),
+      pagination: { perPage: 1, page: 2 },
     },
   }),
 };

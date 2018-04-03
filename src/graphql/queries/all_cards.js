@@ -20,8 +20,11 @@ export default gql`
       pagination: $pagination
     ) {
       cards {
-      ...cardFragment
+        ...cardFragment
       }
+      count
+      nextPage
+      __typename
     }
   }
   ${cardFragment}

@@ -8,5 +8,6 @@ export default gql`
     title
     due_date
     suid
+    __typename
   }
 `;

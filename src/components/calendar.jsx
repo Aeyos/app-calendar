@@ -8,7 +8,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 import Event from './event';
 import Toolbar from './toolbar';
-import { endDateByView, startDateByView, mountDateFilter } from '../utils';
+import { endDateByView, startDateByView, mountDateFilter, transformEdgesToEvents } from '../utils';
 import type { Card, Pipefy, Filter } from '../models';
 
 import '../assets/stylesheets/calendar.css';
@@ -16,7 +16,7 @@ import '../assets/stylesheets/calendar.css';
 type Props = {
   data: {
     error: { message: string },
-    events: Array<Card>,
+    events: Card[],
     loading: boolean,
     refetch: (params: { filter: Filter }) => void,
   },
@@ -35,6 +35,7 @@ class Calendar extends React.Component<Props, State> {
       currentDate: new Date(),
       currentView: 'month',
     };
+    this.handleRefetch = this.handleRefetch.bind(this);
   }
 
   componentWillMount() {
@@ -60,13 +61,50 @@ class Calendar extends React.Component<Props, State> {
     });
   }
 
+  getNumberOfPages(count, pageSize) {
+    return Math.ceil(count / pageSize);
+  }
+
   render() {
-    const { data: { error, events, loading }, pipefy } = this.props;
+    const { data: { error, loading, fetchMore, variables, cardSearch }, pipefy } = this.props;
     const { currentDate: defaultDate, currentView: defaultView } = this.state;
 
     const { showNotification } = pipefy;
 
+    const events = !cardSearch ? [] : transformEdgesToEvents(cardSearch);
+
     if (!loading && error) showNotification(error.message, 'error');
+
+    if (
+      !loading && cardSearch &&
+      variables.pagination.page <
+        this.getNumberOfPages(cardSearch.count, variables.pagination.perPage)
+    ) {
+      fetchMore({
+        variables: {
+          organizationId: 1,
+          filter: mountDateFilter(
+            startDateByView(defaultDate, defaultView),
+            endDateByView(defaultDate, defaultView)
+          ),
+          pipeIds: [1],
+          sortBy: { field: 'due_date', direction: 'desc' },
+          pagination: { perPage: 1, page: variables.pagination.page + 1 },
+        },
+        updateQuery: (prev, next) => {
+          if (!next.fetchMoreResult) return prev;
+          debugger
+          return Object.assign({}, prev, {
+            fetchMoreResult: next.fetchMoreResult,
+            cardSearch: {
+              __typename: next.fetchMoreResult.cardSearch.__typename,
+              count: next.fetchMoreResult.cardSearch.count,
+              cards: [...prev.cardSearch.cards, ...next.fetchMoreResult.cardSearch.cards],
+            },
+          });
+        },
+      });
+    }
 
     return (
       <BigCalendar

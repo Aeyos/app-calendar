@@ -20,11 +20,10 @@ export const startDateByView = (date: Date, view: string): string =>
     .startOf(unit(view))
     .toISOString();
 
-export const transformEdgesToEvents = (data: {cards: Card[]}) =>
+export const transformEdgesToEvents = (data: {cards: Card[], count: number}) =>
   data.cards.map(card => {
     const start = new Date(card.due_date);
     const end = new Date(start.getTime() + 30 * 60000);
-
     return {
       end,
       id: card.suid,
