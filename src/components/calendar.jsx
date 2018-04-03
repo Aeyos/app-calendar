@@ -9,7 +9,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import Event from './event';
 import Toolbar from './toolbar';
 import { endDateByView, startDateByView, mountDateFilter } from '../utils';
-import type { Card, Pipefy } from '../models';
+import type { Card, Pipefy, Filter } from '../models';
 
 import '../assets/stylesheets/calendar.css';
 
@@ -18,7 +18,7 @@ type Props = {
     error: { message: string },
     events: Array<Card>,
     loading: boolean,
-    refetch: (variables: { endDate: string, startDate: string }) => void,
+    refetch: (params: { filter: Filter }) => void,
   },
   pipefy: Pipefy,
 };
