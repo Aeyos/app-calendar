@@ -3,7 +3,7 @@
 import { graphql } from 'react-apollo';
 
 import Calendar from '../components/calendar';
-import { endDateByView, startDateByView, transformEdgesToEvents, mountDateFilter } from '../utils';
+import { endDateByView, startDateByView, mountDateFilter } from '../utils';
 import ALL_CARDS_QUERY from '../graphql/queries/all_cards';
 
 const defaultDate = new Date();

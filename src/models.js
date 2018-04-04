@@ -12,6 +12,8 @@ export type Pipefy = {
   locale: string,
   openCard: (id: string) => void,
   showNotification: (message: string, type: string) => void,
+  organizationId: number,
+  app: {pipeId: number}
 };
 
 export type Filter = {

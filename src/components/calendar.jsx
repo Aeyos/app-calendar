@@ -19,6 +19,9 @@ type Props = {
     events: Card[],
     loading: boolean,
     refetch: (params: { filter: Filter }) => void,
+    fetchMore: (param: {}) => void,
+    variables: { pagination: {page: number, perPage: number}},
+    cardSearch: {cards: Card[], nextPage: number}
   },
   pipefy: Pipefy,
 };
@@ -35,14 +38,13 @@ class Calendar extends React.Component<Props, State> {
       currentDate: new Date(),
       currentView: 'month',
     };
-    this.handleRefetch = this.handleRefetch.bind(this);
   }
 
   componentWillMount() {
     BigCalendar.setLocalizer(BigCalendar.momentLocalizer(moment));
   }
 
-  handleRefetch(currentView: string, currentDate: ?string) {
+  handleRefetch = (currentView: string, currentDate: ?string):void => {
     const { data: { refetch } } = this.props;
     let { currentDate: storedDate } = this.state;
 
@@ -60,6 +62,7 @@ class Calendar extends React.Component<Props, State> {
       ),
     });
   }
+
   render() {
     const { data: { error, loading, fetchMore, variables, cardSearch }, pipefy } = this.props;
     const { currentDate: defaultDate, currentView: defaultView } = this.state;
@@ -67,16 +70,15 @@ class Calendar extends React.Component<Props, State> {
     const events = !cardSearch ? [] : transformEdgesToEvents(cardSearch);
 
     if (!loading && error) showNotification(error.message, 'error');
-
     if (!loading && cardSearch && variables.pagination.page < cardSearch.nextPage) {
       fetchMore({
         variables: {
-          organizationId: 1,
+          organizationId: pipefy.organizationId,
           filter: mountDateFilter(
             startDateByView(defaultDate, defaultView),
             endDateByView(defaultDate, defaultView)
           ),
-          pipeIds: [1],
+          pipeIds: [pipefy.app.pipeId],
           sortBy: { field: 'due_date', direction: 'desc' },
           pagination: { perPage: variables.pagination.perPage, page: cardSearch.nextPage },
         },
