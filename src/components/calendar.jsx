@@ -60,26 +60,15 @@ class Calendar extends React.Component<Props, State> {
       ),
     });
   }
-
-  getNumberOfPages(count, pageSize) {
-    return Math.ceil(count / pageSize);
-  }
-
   render() {
     const { data: { error, loading, fetchMore, variables, cardSearch }, pipefy } = this.props;
     const { currentDate: defaultDate, currentView: defaultView } = this.state;
-
     const { showNotification } = pipefy;
-
     const events = !cardSearch ? [] : transformEdgesToEvents(cardSearch);
 
     if (!loading && error) showNotification(error.message, 'error');
 
-    if (
-      !loading && cardSearch &&
-      variables.pagination.page <
-        this.getNumberOfPages(cardSearch.count, variables.pagination.perPage)
-    ) {
+    if (!loading && cardSearch && variables.pagination.page < cardSearch.nextPage) {
       fetchMore({
         variables: {
           organizationId: 1,
@@ -89,14 +78,14 @@ class Calendar extends React.Component<Props, State> {
           ),
           pipeIds: [1],
           sortBy: { field: 'due_date', direction: 'desc' },
-          pagination: { perPage: 1, page: variables.pagination.page + 1 },
+          pagination: { perPage: variables.pagination.perPage, page: cardSearch.nextPage },
         },
         updateQuery: (prev, next) => {
           if (!next.fetchMoreResult) return prev;
-          debugger
           return Object.assign({}, prev, {
             fetchMoreResult: next.fetchMoreResult,
             cardSearch: {
+              nextPage: next.fetchMoreResult.cardSearch.nextPage,
               __typename: next.fetchMoreResult.cardSearch.__typename,
               count: next.fetchMoreResult.cardSearch.count,
               cards: [...prev.cardSearch.cards, ...next.fetchMoreResult.cardSearch.cards],

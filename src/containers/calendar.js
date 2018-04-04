@@ -19,7 +19,7 @@ const allCardsQueryOptions = {
       ),
       pipeIds: [pipefy.app.pipeId],
       sortBy: { field: 'due_date', direction: 'desc' },
-      pagination: { perPage: 1, page: 2 },
+      pagination: { perPage: 100, page: 1 },
     },
   }),
 };
