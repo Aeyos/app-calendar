@@ -49,7 +49,7 @@ describe('Start date by view', () => {
 });
 
 it('Transform edges to events', () => {
-  const result = transformEdgesToEvents(data.allCards.edges);
+  const result = transformEdgesToEvents(data.cardSearch);
   const expected = [event];
   expect(result).toEqual(expect.arrayContaining(expected));
 });

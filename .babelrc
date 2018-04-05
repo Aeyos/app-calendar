@@ -1,15 +1,4 @@
 {
-  "presets": [
-    [
-      "@babel/preset-env",
-      {
-        "targets": {
-          "browsers": ["last 2 versions", "ie 11"]
-        }
-      }
-    ],
-    "@babel/preset-flow",
-    "@babel/preset-react"
-  ],
-  "plugins": ["@babel/plugin-proposal-object-rest-spread", "transform-class-properties"]
+ "presets": ["env", "react", "stage-2"],
+ "plugins": ["transform-class-properties"]
 }
