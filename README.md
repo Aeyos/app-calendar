@@ -29,13 +29,19 @@ $ yarn compile
 
 If you need to keep Webpack watching your changes add `-w`, eg: `yarn compile -w`.
 
-> The Calendar App access the Pipefy's GraphQL API localy (in development environment), so you'll need to run the Pipefy App too (eg. `cd path/to/pipefy/ && rails s`).
+> The Calendar App access the Pipefy's GraphQL API locally (in development environment), so you'll need to run the Pipefy App too (eg. `cd path/to/pipefy/ && rails s`).
 
 #### Further Setting on Pipefy
 
 To Calendar App access the GraphQL API properly, you need to do some settings on Pipefy too.
 
-* Start the Pipefy App localy
+* Add the `CALENDAR_APP_URL` ENV var on `.env.local`, for example:
+
+```
+CALENDAR_APP_URL=localhost:3001
+```
+
+* Start the Pipefy App locally
 * Create (or rename) a organization with the name __Pipefy Team__
 * Access [OAuth2 Provider](http://localhost:3000/oauth/applications/) and create a new application
 * Start the Pipefy App's console, eg: `cd path/to/pipefy/ && rails c`
