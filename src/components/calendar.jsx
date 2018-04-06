@@ -8,7 +8,13 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 import Event from './event';
 import Toolbar from './toolbar';
-import { endDateByView, startDateByView, mountDateFilter, transformEdgesToEvents } from '../utils';
+import {
+  endDateByView,
+  startDateByView,
+  mountDateFilter,
+  transformEdgesToEvents,
+  getFetchMoreParams,
+} from '../utils';
 import type { Card, Pipefy, Filter } from '../models';
 
 import '../assets/stylesheets/calendar.css';
@@ -20,8 +26,8 @@ type Props = {
     loading: boolean,
     refetch: (params: { filter: Filter }) => void,
     fetchMore: (param: {}) => void,
-    variables: { pagination: {page: number, perPage: number}},
-    cardSearch: {cards: Card[], nextPage: number}
+    variables: { pagination: { page: number, perPage: number } },
+    cardSearch: { cards: Card[], nextPage: number },
   },
   pipefy: Pipefy,
 };
@@ -44,7 +50,7 @@ class Calendar extends React.Component<Props, State> {
     BigCalendar.setLocalizer(BigCalendar.momentLocalizer(moment));
   }
 
-  handleRefetch = (currentView: string, currentDate: ?string):void => {
+  handleRefetch = (currentView: string, currentDate: ?string): void => {
     const { data: { refetch } } = this.props;
     let { currentDate: storedDate } = this.state;
 
@@ -61,7 +67,7 @@ class Calendar extends React.Component<Props, State> {
         endDateByView(storedDate, currentView)
       ),
     });
-  }
+  };
 
   render() {
     const { data: { error, loading, fetchMore, variables, cardSearch }, pipefy } = this.props;
@@ -71,30 +77,16 @@ class Calendar extends React.Component<Props, State> {
 
     if (!loading && error) showNotification(error.message, 'error');
     if (!loading && cardSearch && variables.pagination.page < cardSearch.nextPage) {
-      fetchMore({
-        variables: {
-          organizationId: pipefy.organizationId,
-          filter: mountDateFilter(
-            startDateByView(defaultDate, defaultView),
-            endDateByView(defaultDate, defaultView)
-          ),
-          pipeIds: [pipefy.app.pipeId],
-          sortBy: { field: 'due_date', direction: 'desc' },
-          pagination: { perPage: variables.pagination.perPage, page: cardSearch.nextPage },
-        },
-        updateQuery: (prev, next) => {
-          if (!next.fetchMoreResult) return prev;
-          return Object.assign({}, prev, {
-            fetchMoreResult: next.fetchMoreResult,
-            cardSearch: {
-              nextPage: next.fetchMoreResult.cardSearch.nextPage,
-              __typename: next.fetchMoreResult.cardSearch.__typename,
-              count: next.fetchMoreResult.cardSearch.count,
-              cards: [...prev.cardSearch.cards, ...next.fetchMoreResult.cardSearch.cards],
-            },
-          });
-        },
-      });
+      fetchMore(
+        getFetchMoreParams(
+          pipefy.organizationId,
+          defaultDate,
+          defaultView,
+          pipefy.app.pipeId,
+          variables.pagination.perPage,
+          cardSearch.nextPage
+        )
+      );
     }
 
     return (

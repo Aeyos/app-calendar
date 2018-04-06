@@ -1,7 +1,7 @@
-import allCardsQuery from '../all_cards';
+import cardSearchQuery from '../card_search';
 
-describe('All cards query', () => {
+describe('Card Search query', () => {
   it('match snapshot', () => {
-    expect(allCardsQuery).toMatchSnapshot();
+    expect(cardSearchQuery).toMatchSnapshot();
   });
 });

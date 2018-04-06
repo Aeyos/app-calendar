@@ -4,12 +4,12 @@ import { graphql } from 'react-apollo';
 
 import Calendar from '../components/calendar';
 import { endDateByView, startDateByView, mountDateFilter } from '../utils';
-import ALL_CARDS_QUERY from '../graphql/queries/all_cards';
+import CARD_SEARCH_QUERY from '../graphql/queries/card_search';
 
 const defaultDate = new Date();
 const defaultView = 'month';
 
-const allCardsQueryOptions = {
+const cardSearchQueryOptions = {
   options: ({ pipefy }) => ({
     variables: {
       organizationId: pipefy.organizationId,
@@ -24,4 +24,4 @@ const allCardsQueryOptions = {
   }),
 };
 
-export default graphql(ALL_CARDS_QUERY, allCardsQueryOptions)(Calendar);
+export default graphql(CARD_SEARCH_QUERY, cardSearchQueryOptions)(Calendar);

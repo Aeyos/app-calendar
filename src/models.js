@@ -5,7 +5,7 @@ export type Card = {
   due_date: string,
   suid: string,
   title: string,
-  suid: string
+  suid: string,
 };
 
 export type Pipefy = {
@@ -13,7 +13,7 @@ export type Pipefy = {
   openCard: (id: string) => void,
   showNotification: (message: string, type: string) => void,
   organizationId: number,
-  app: {pipeId: number}
+  app: { pipeId: number },
 };
 
 export type Filter = {
@@ -32,4 +32,10 @@ export type Filter = {
       type: string,
     },
   ],
+};
+
+export type NextType = {
+  fetchMoreResult: {
+    cardSearch: { count: number, nextPage: number, cards: Card[], __typename: 'string' },
+  },
 };

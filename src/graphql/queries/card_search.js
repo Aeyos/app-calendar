@@ -5,7 +5,7 @@ import gql from 'graphql-tag';
 import cardFragment from '../fragments/card_fragment';
 
 export default gql`
-  query allCardsQuery(
+  query cardSearchQuery(
     $organizationId: ID!,
     $filter: OrganizationCardsFilter,
     $pipeIds: [Int]!,
